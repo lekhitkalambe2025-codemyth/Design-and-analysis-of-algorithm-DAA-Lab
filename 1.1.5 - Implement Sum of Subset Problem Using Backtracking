@@ -1,0 +1,59 @@
+#include <stdio.h>
+#include <string.h>
+
+int a[100], subset[100];
+char ans[1000][1000];
+int count = 0;
+
+void storeSubset(int size) {
+    int pos = 0;
+
+    for (int i = 0; i < size; i++) {
+        pos += sprintf(ans[count] + pos, "%d ", subset[i]);
+    }
+
+    ans[count][pos] = '\0'; 
+    count++;
+}
+
+void sumOfSubsets(int index, int n, int sum, int target, int size) {
+
+    if (sum == target) {
+        storeSubset(size);
+        return;
+    }
+
+    if (index == n)
+        return;
+
+    // Include current element
+    subset[size] = a[index];
+    sumOfSubsets(index + 1, n, sum + a[index], target, size + 1);
+
+    // Exclude current element
+    sumOfSubsets(index + 1, n, sum, target, size);
+}
+
+int main() {
+    int n, target;
+
+    scanf("%d", &n);
+
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &a[i]);
+    }
+
+    scanf("%d", &target);
+
+    sumOfSubsets(0, n, 0, target, 0);
+
+    if (count == 0) {
+        printf("-1");
+    } else {
+        for (int i = count - 1; i >= 0; i--) {
+            printf("%s\n", ans[i]);
+        }
+    }
+
+    return 0;
+}
